@@ -28,16 +28,16 @@ class MyApp extends StatelessWidget {
         //
         // This works for code too, not just values: Most code changes can be
         // tested with just a hot reload.
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepOrange),
         useMaterial3: true,
       ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
+      home: const MyHomePage(studentID: '211035'),
     );
   }
 }
 
 class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
+  const MyHomePage({super.key, required this.studentID});
 
   // This widget is the home page of your application. It is stateful, meaning
   // that it has a State object (defined below) that contains fields that affect
@@ -48,25 +48,19 @@ class MyHomePage extends StatefulWidget {
   // used by the build method of the State. Fields in a Widget subclass are
   // always marked "final".
 
-  final String title;
+  final String studentID;
 
   @override
   State<MyHomePage> createState() => _MyHomePageState();
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
+  final List<Map<String, String>> clothes = [
+    {'name': 'Sneakers', 'image': 'assets/sneakers.png', 'description': 'Modern sport sneakers.', 'price': '\$70'},
+    {'name': 'Dress', 'image': 'assets/dress.png', 'description': 'Green dress for special occasion.', 'price': '\$40'},
+    {'name': 'Jacket', 'image': 'assets/jacket.png', 'description': 'Denim male jacket.', 'price': '\$60'},
+  ];
 
-  void _incrementCounter() {
-    setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
-      _counter++;
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -84,7 +78,7 @@ class _MyHomePageState extends State<MyHomePage> {
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         // Here we take the value from the MyHomePage object that was created by
         // the App.build method, and use it to set our appbar title.
-        title: Text(widget.title),
+        title: Text(widget.studentID),
       ),
       body: Center(
         // Center is a layout widget. It takes a single child and positions it
@@ -104,22 +98,89 @@ class _MyHomePageState extends State<MyHomePage> {
           // action in the IDE, or press "p" in the console), to see the
           // wireframe for each widget.
           mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
+          children: [
             const Text(
-              'You have pushed the button this many times:',
+              'List of available clothes',
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headlineMedium,
+            Expanded(
+              child: ListView.builder(
+                padding: const EdgeInsets.all(8.0),
+                itemCount: 3, // Number of cards to display
+                itemBuilder: (context, index) {
+                  final item = clothes[index];
+                  return Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 4.0),
+                    child: CardExample(
+                      name: item['name']!,
+                      image: item['image']!,
+                      description: item['description']!,
+                      price: item['price']!
+                    ),
+                  );
+                },
+              ),
             ),
           ],
         ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
+      )
     );
   }
 }
+
+class CardExample extends StatelessWidget {
+  final String name;
+  final String image;
+  final String description;
+  final String price;
+
+
+  const CardExample({super.key, required this.name, required this.image, required this.description, required this.price});
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Card(
+        // clipBehavior is necessary because, without it, the InkWell's animation
+        // will extend beyond the rounded edges of the [Card] (see https://github.com/flutter/flutter/issues/109776)
+        // This comes with a small performance cost, and you should not set [clipBehavior]
+        // unless you need it.
+        clipBehavior: Clip.hardEdge,
+        child: InkWell(
+          splashColor: Colors.blue.withAlpha(30),
+          onTap: () {
+            debugPrint('Card tapped.');
+          },
+          child: Row(
+            children: [
+              Image.asset(
+                image,
+                width: 100,
+                height: 100,
+                fit: BoxFit.cover,
+              ),
+              const SizedBox(width: 10),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      name,
+                      style: const TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+
+
