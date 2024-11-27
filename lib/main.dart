@@ -149,33 +149,99 @@ class CardExample extends StatelessWidget {
         child: InkWell(
           splashColor: Colors.blue.withAlpha(30),
           onTap: () {
-            debugPrint('Card tapped.');
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => DetailsPage(name: name, image: image, description: description, price: price,)
+                ),
+            );
           },
-          child: Row(
-            children: [
-              Image.asset(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+              Center(
+              child: Image.asset(
                 image,
-                width: 100,
-                height: 100,
+                width: 300,
+                height: 300,
                 fit: BoxFit.cover,
               ),
+              ),
               const SizedBox(width: 10),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
+                Center(
+                  child: Text(
                       name,
                       style: const TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                  ],
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
+        ),
+      );
+  }
+}
+
+class DetailsPage extends StatelessWidget {
+  final String name;
+  final String image;
+  final String description;
+  final String price;
+
+  const DetailsPage({
+    super.key,
+    required this.name,
+    required this.image,
+    required this.description,
+    required this.price,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(name),
+        backgroundColor: Colors.deepOrange,
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Image.asset(
+              image,
+              width: double.infinity,
+              height: 300,
+              fit: BoxFit.cover,
+            ),
+            const SizedBox(height: 20),
+            Text(
+              name,
+              style: const TextStyle(
+                fontSize: 24,
+                fontWeight: FontWeight.bold,
+              ),
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: 10),
+            Text(
+              description,
+              style: const TextStyle(fontSize: 16),
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: 20),
+            Text(
+              price,
+              style: const TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+                color: Colors.green,
+              ),
+            ),
+          ],
         ),
       ),
     );
